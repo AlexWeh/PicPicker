@@ -31,7 +31,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.descriptionTextBox = new System.Windows.Forms.RichTextBox();
             this.setPosition = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +43,7 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.prevButton = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.markerCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -53,6 +53,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.markerCheckbox);
             this.groupBox1.Controls.Add(this.descriptionTextBox);
             this.groupBox1.Controls.Add(this.setPosition);
             this.groupBox1.Location = new System.Drawing.Point(1019, 27);
@@ -80,21 +81,6 @@
             this.setPosition.Text = "Set Face";
             this.setPosition.UseVisualStyleBackColor = true;
             this.setPosition.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label2.ForeColor = System.Drawing.Color.Transparent;
-            this.label2.ImageKey = "(none)";
-            this.label2.Location = new System.Drawing.Point(345, 291);
-            this.label2.MaximumSize = new System.Drawing.Size(64, 64);
-            this.label2.MinimumSize = new System.Drawing.Size(64, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 64);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "label2";
             // 
             // menuStrip1
             // 
@@ -195,17 +181,29 @@
             this.pictureBox.Location = new System.Drawing.Point(12, 27);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(1001, 642);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // markerCheckbox
+            // 
+            this.markerCheckbox.AutoSize = true;
+            this.markerCheckbox.Checked = true;
+            this.markerCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.markerCheckbox.Location = new System.Drawing.Point(53, 234);
+            this.markerCheckbox.Name = "markerCheckbox";
+            this.markerCheckbox.Size = new System.Drawing.Size(89, 17);
+            this.markerCheckbox.TabIndex = 2;
+            this.markerCheckbox.Text = "Show Marker";
+            this.markerCheckbox.UseVisualStyleBackColor = true;
+            this.markerCheckbox.CheckedChanged += new System.EventHandler(this.markerCheckbox_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1211, 710);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.prevButton);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.imgCounterLabel);
@@ -218,6 +216,7 @@
             this.Text = "PicPicker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
@@ -243,7 +242,7 @@
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.Button prevButton;
         private System.Windows.Forms.RichTextBox descriptionTextBox;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox markerCheckbox;
     }
 }
 

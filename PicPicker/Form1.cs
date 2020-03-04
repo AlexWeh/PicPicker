@@ -17,10 +17,15 @@ namespace PicPicker
         private int picCounter = 0;
         private Image currentImage;
         private System.Text.ASCIIEncoding enc = new ASCIIEncoding();
+        private bool editMode = true;
+        private List<Label> markerList = new List<Label>();
+        private Bitmap marker = new Bitmap(Properties.Resources.Marker);
 
         public Form1()
         {
+            marker.MakeTransparent(marker.GetPixel(10, 10));
             InitializeComponent();
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -56,20 +61,24 @@ namespace PicPicker
             }
             else
             {
-                Console.WriteLine(PointToClient(Cursor.Position));
-                label2.Size = new Size(64, 64);
-                Bitmap marker = new Bitmap(Image.FromFile("Untitled.bmp"));
-                marker.MakeTransparent(marker.GetPixel(10,10));
-                label2.Parent = pictureBox;
-                label2.BackColor = Color.Transparent;
-                label2.Image = marker;
-                label2.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
+                if (editMode == true)
+                {
+                    Label newMarker = new Label();
+
+                    newMarker.Size = new Size(marker.Width, marker.Height);
+                    newMarker.Parent = pictureBox;
+                    newMarker.BackColor = Color.Transparent;
+                    newMarker.Image = marker;
+                    newMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
+
+                    markerList.Add(newMarker);
+                }
             }
         }
 
         private void loadPicture()
         {
-            if (picCounter >= 0 || picCounter < imageFileList.Count)
+            if (picCounter >= 0 && picCounter < imageFileList.Count)
             {
                 currentImage = Image.FromFile(imageFileList[picCounter]);
                 pictureBox.Image = currentImage;
@@ -129,6 +138,24 @@ namespace PicPicker
             Console.WriteLine(descriptionTextBox.Text);
             propertyItem.Value = enc.GetBytes(descriptionTextBox.Text);
             currentImage.SetPropertyItem(propertyItem);
+        }
+
+        private void markerCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (markerCheckbox.Checked)
+            {
+                foreach (Label marker in markerList)
+                {
+                    marker.Visible = true;
+                }
+            }
+            else
+            {
+                foreach (Label marker in markerList)
+                {
+                    marker.Visible = false;
+                }
+            }
         }
     }
 }
