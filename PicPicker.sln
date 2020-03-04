@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicPicker", "PicPicker\PicPicker.csproj", "{76DA2973-B995-47F4-B369-2D549292FFFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76DA2973-B995-47F4-B369-2D549292FFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76DA2973-B995-47F4-B369-2D549292FFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76DA2973-B995-47F4-B369-2D549292FFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76DA2973-B995-47F4-B369-2D549292FFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8C8DE2A-E437-4B1C-975E-8AA89E508B9C}
+	EndGlobalSection
+EndGlobal
