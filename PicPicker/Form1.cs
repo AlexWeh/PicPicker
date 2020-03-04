@@ -18,53 +18,52 @@ namespace PicPicker
         private Image currentImage;
         private System.Text.ASCIIEncoding enc = new ASCIIEncoding();
         private bool editMode = true;
-        private List<Label> markerList = new List<Label>();
+        private BindingList<Label> markerList = new BindingList<Label>();
         private Bitmap marker = new Bitmap(Properties.Resources.Marker);
+        private int markerCounter = 0;
 
         public Form1()
         {
+            
             marker.MakeTransparent(marker.GetPixel(10, 10));
             InitializeComponent();
-            
+            InitListBox();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void InitListBox()
         {
+            markerListBox.DataSource = markerList;
+            markerListBox.DisplayMember = "Text";
+            markerListBox.ValueMember = "Text";
+            markerListBox.SelectionMode = SelectionMode.MultiExtended;
+        }
 
+        private void deleteMarker_Click(object sender, EventArgs e)
+        {
+            //TODO - Fix deletion of last element
+            for (int x = markerListBox.Items.Count - 1; x >= 0; x--)
+            {
+                if (markerListBox.GetSelected(x) == true)
+                {
+                    markerList[x].Dispose();
+                    markerList.RemoveAt(x);
+                } 
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             if (pictureBox.Image == null)
             {
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string file in openFileDialog.FileNames)
-                    {
-                        try
-                        {
-                            Image tryLoadingAsImage = Image.FromFile(file);
-                            imageFileList.Add(file);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Could not load the image - probably related to Windows file system permissions.
-                            MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
-                                + ". You may not have permission to read the file, or " +
-                                "it may be corrupt.\n\nReported error: " + ex.Message);
-                        }
-                    }
-                    label1.Visible = false;
-                    
-                    loadPicture();
-                }
+                openLoadDialog();
+                waitingForOpenLabel.Visible = false;
             }
             else
             {
                 if (editMode == true)
                 {
                     Label newMarker = new Label();
-
+                    newMarker.Text = markerCounter.ToString();
                     newMarker.Size = new Size(marker.Width, marker.Height);
                     newMarker.Parent = pictureBox;
                     newMarker.BackColor = Color.Transparent;
@@ -72,27 +71,31 @@ namespace PicPicker
                     newMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
 
                     markerList.Add(newMarker);
+                    markerCounter++;
                 }
             }
         }
 
-        private void loadPicture()
+        private void openLoadDialog()
         {
-            if (picCounter >= 0 && picCounter < imageFileList.Count)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                currentImage = Image.FromFile(imageFileList[picCounter]);
-                pictureBox.Image = currentImage;
-                //Console.WriteLine(currentImage.GetPropertyItem(271).Type);
-                
-                try
+                foreach (string file in openFileDialog.FileNames)
                 {
-                    hasDescriptionMeta(currentImage.GetPropertyItem(270));
+                    try
+                    {
+                        Image tryLoadingAsImage = Image.FromFile(file);
+                        imageFileList.Add(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Could not load the image - probably related to Windows file system permissions.
+                        MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                            + ". You may not have permission to read the file, or " +
+                            "it may be corrupt.\n\nReported error: " + ex.Message);
+                    }
                 }
-                catch (Exception)
-                {
-                    noDescriptionMeta(currentImage.GetPropertyItem(40092));
-                }
-                imgCounterLabel.Text = "(" + (picCounter + 1) + "/" + imageFileList.Count + ")";
+                loadPicture();
             }
         }
 
@@ -115,15 +118,30 @@ namespace PicPicker
             descriptionTextBox.Text = enc.GetString(propertyItem.Value); 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void nextButton_Click(object sender, EventArgs e)
         {
             picCounter++;
             loadPicture();
+        }
+
+        private void loadPicture()
+        {
+            if (picCounter >= 0 && picCounter < imageFileList.Count)
+            {
+                currentImage = Image.FromFile(imageFileList[picCounter]);
+                pictureBox.Image = currentImage;
+                //Console.WriteLine(currentImage.GetPropertyItem(271).Type);
+
+                try
+                {
+                    hasDescriptionMeta(currentImage.GetPropertyItem(270));
+                }
+                catch (Exception)
+                {
+                    noDescriptionMeta(currentImage.GetPropertyItem(40092));
+                }
+                imgCounterLabel.Text = "(" + (picCounter + 1) + "/" + imageFileList.Count + ")";
+            }
         }
 
         private void prevButton_Click(object sender, EventArgs e)
@@ -156,6 +174,11 @@ namespace PicPicker
                     marker.Visible = false;
                 }
             }
+        }
+
+        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openLoadDialog();
         }
     }
 }
