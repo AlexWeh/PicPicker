@@ -20,7 +20,8 @@ namespace PicPicker
         private bool editMode = true;
         private BindingList<Label> markerList = new BindingList<Label>();
         private Bitmap marker = new Bitmap(Properties.Resources.Marker);
-        private int markerCounter = 0;
+        private int currentMarker = 0;
+        Label tempMarker;
 
         public Form1()
         {
@@ -28,8 +29,21 @@ namespace PicPicker
             marker.MakeTransparent(marker.GetPixel(10, 10));
             InitializeComponent();
             InitListBox();
+            markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
         }
 
+        private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                tempMarker.Text = markerLabelTextBox.Text;
+                tempMarker.Focus();
+                markerLabelTextBox.Text = "";
+                markerLabelTextBox.Visible = false;
+                markerList.Add(tempMarker);
+                currentMarker++;
+            }
+        }
         private void InitListBox()
         {
             markerListBox.DataSource = markerList;
@@ -47,6 +61,7 @@ namespace PicPicker
                 {
                     markerList[x].Dispose();
                     markerList.RemoveAt(x);
+                    currentMarker--;
                 } 
             }
         }
@@ -62,16 +77,17 @@ namespace PicPicker
             {
                 if (editMode == true)
                 {
-                    Label newMarker = new Label();
-                    newMarker.Text = markerCounter.ToString();
-                    newMarker.Size = new Size(marker.Width, marker.Height);
-                    newMarker.Parent = pictureBox;
-                    newMarker.BackColor = Color.Transparent;
-                    newMarker.Image = marker;
-                    newMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
+                    tempMarker = new Label();
+                    markerLabelTextBox.Location = PointToClient(new Point(Cursor.Position.X + 5, Cursor.Position.Y + 5));
+                    markerLabelTextBox.Visible = true;
+                    markerLabelTextBox.Focus();
 
-                    markerList.Add(newMarker);
-                    markerCounter++;
+                    
+                    tempMarker.Size = new Size(marker.Width, marker.Height);
+                    tempMarker.Parent = pictureBox;
+                    tempMarker.BackColor = Color.Transparent;
+                    tempMarker.Image = marker;
+                    tempMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
                 }
             }
         }

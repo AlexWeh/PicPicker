@@ -45,6 +45,7 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.prevButton = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.markerLabelTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -210,11 +211,20 @@
             this.pictureBox.TabStop = false;
             this.pictureBox.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
+            // markerLabelTextBox
+            // 
+            this.markerLabelTextBox.Location = new System.Drawing.Point(905, 46);
+            this.markerLabelTextBox.Name = "markerLabelTextBox";
+            this.markerLabelTextBox.Size = new System.Drawing.Size(100, 20);
+            this.markerLabelTextBox.TabIndex = 7;
+            this.markerLabelTextBox.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1211, 710);
+            this.Controls.Add(this.markerLabelTextBox);
             this.Controls.Add(this.prevButton);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.imgCounterLabel);
@@ -254,6 +264,7 @@
         private System.Windows.Forms.RichTextBox descriptionTextBox;
         private System.Windows.Forms.CheckBox markerCheckbox;
         private System.Windows.Forms.ListBox markerListBox;
+        private System.Windows.Forms.TextBox markerLabelTextBox;
     }
 }
 
