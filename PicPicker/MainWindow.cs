@@ -8,20 +8,23 @@ using System.Windows.Forms;
 
 namespace PicPicker
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
-        private List<String> imageFileList = new List<String>();
         private int picCounter = 0;
+        private int currentMarker = 0;
+
+        private List<String> imageFileList = new List<String>();
+        private BindingList<Label> markerList = new BindingList<Label>();
+
+        private Bitmap marker = new Bitmap(Properties.Resources.Marker);
+        private Bitmap highlightedMarker = new Bitmap(Properties.Resources.HighlightedMarker);
+
         private Image currentImage;
         private System.Text.ASCIIEncoding enc = new ASCIIEncoding();
         private bool editMode = true;
-        private BindingList<Label> markerList = new BindingList<Label>();
-        private Bitmap marker = new Bitmap(Properties.Resources.Marker);
-        private Bitmap highlightedMarker = new Bitmap(Properties.Resources.HighlightedMarker);
-        private int currentMarker = 0;
-        Label tempMarker;
+        private Label tempMarker;
 
-        public Form1()
+        public MainWindow()
         {
             marker.MakeTransparent(marker.GetPixel(marker.Width/2, marker.Height/2));
             highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(highlightedMarker.Width/2, highlightedMarker.Height/2));
@@ -35,7 +38,6 @@ namespace PicPicker
             markerListBox.DisplayMember = "Text";
             markerListBox.ValueMember = "Text";
 
-            //markerLabelTextBox.LostFocus += new EventHandler(markerLabelTextBox_LostFocus);
             markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
         }
 
@@ -46,33 +48,33 @@ namespace PicPicker
 
         private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Console.WriteLine("Fire!");
-            Console.WriteLine(e.KeyChar);
             if (e.KeyChar == (char)Keys.Enter)
             {
-                tempMarker.Text = markerLabelTextBox.Text;
-                markerList.Add(tempMarker);
+                if (markerLabelTextBox.Text != "")
+                {
+                    tempMarker.Text = markerLabelTextBox.Text;
+                    markerList.Add(tempMarker);
+                    tempMarker = null;
 
-                markerLabelTextBox.Text = "";
-                markerLabelTextBox.Visible = false;
-                
-                currentMarker++;
-                pictureBox.Focus();
-                Console.WriteLine("TempMarker: " + tempMarker.Text);
-                Console.WriteLine("MarkerList_Count: " + markerList.Count);
-                Console.WriteLine("MarkerList: " + markerList[markerList.Count-1]);
-                Console.WriteLine("--------");
-                markerListBox.ClearSelected();
+                    markerLabelTextBox.Text = "";
+                    markerLabelTextBox.Visible = false;
+                    
+                    pictureBox.Focus();
+                    markerListBox.ClearSelected();
+
+                    currentMarker++;
+                }
             }
             else if (e.KeyChar == (char)Keys.Escape)
             {
-                //unselectTextbox();
+                unselectTextbox();
             }
         }
 
         private void unselectTextbox()
         {
             tempMarker.Dispose();
+            tempMarker = null;
             markerLabelTextBox.Text = "";
             markerLabelTextBox.Visible = false;
         }
@@ -96,9 +98,11 @@ namespace PicPicker
             {
                 if (editMode == true)
                 {
+                    
                     if (tempMarker != null)
                     {
-                        tempMarker.Focus();
+                        tempMarker.Dispose();
+                        tempMarker = null;
                     }
                     tempMarker = new Label();
                     tempMarker.Size = new Size(marker.Width, marker.Height);
@@ -106,6 +110,8 @@ namespace PicPicker
                     tempMarker.BackColor = Color.Transparent;
                     tempMarker.Image = marker;
                     tempMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
+
+                    Console.WriteLine(tempMarker.Location.X + " / " + tempMarker.Location.Y);
 
                     markerLabelTextBox.Visible = true;
                     markerLabelTextBox.Location = PointToClient(new Point(Cursor.Position.X + 5, Cursor.Position.Y + 5));
@@ -127,7 +133,6 @@ namespace PicPicker
                     }
                     catch (Exception ex)
                     {
-                        // Could not load the image - probably related to Windows file system permissions.
                         MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
                             + ". You may not have permission to read the file, or " +
                             "it may be corrupt.\n\nReported error: " + ex.Message);

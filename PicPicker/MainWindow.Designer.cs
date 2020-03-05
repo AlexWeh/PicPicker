@@ -1,6 +1,6 @@
 ﻿namespace PicPicker
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -67,10 +67,11 @@
             // 
             // markerListBox
             // 
+            this.markerListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.markerListBox.FormattingEnabled = true;
-            this.markerListBox.Location = new System.Drawing.Point(6, 245);
+            this.markerListBox.Location = new System.Drawing.Point(6, 19);
             this.markerListBox.Name = "markerListBox";
-            this.markerListBox.Size = new System.Drawing.Size(168, 186);
+            this.markerListBox.Size = new System.Drawing.Size(168, 184);
             this.markerListBox.TabIndex = 3;
             this.markerListBox.SelectedIndexChanged += new System.EventHandler(this.markerListBox_SelectedIndexChanged);
             // 
@@ -79,7 +80,7 @@
             this.markerCheckbox.AutoSize = true;
             this.markerCheckbox.Checked = true;
             this.markerCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.markerCheckbox.Location = new System.Drawing.Point(6, 212);
+            this.markerCheckbox.Location = new System.Drawing.Point(6, 213);
             this.markerCheckbox.Name = "markerCheckbox";
             this.markerCheckbox.Size = new System.Drawing.Size(89, 17);
             this.markerCheckbox.TabIndex = 2;
@@ -89,7 +90,8 @@
             // 
             // descriptionTextBox
             // 
-            this.descriptionTextBox.Location = new System.Drawing.Point(6, 19);
+            this.descriptionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.descriptionTextBox.Location = new System.Drawing.Point(6, 238);
             this.descriptionTextBox.Name = "descriptionTextBox";
             this.descriptionTextBox.Size = new System.Drawing.Size(168, 144);
             this.descriptionTextBox.TabIndex = 1;
@@ -99,7 +101,7 @@
             // deleteMarkerButton
             // 
             this.deleteMarkerButton.Cursor = System.Windows.Forms.Cursors.Default;
-            this.deleteMarkerButton.Location = new System.Drawing.Point(99, 437);
+            this.deleteMarkerButton.Location = new System.Drawing.Point(99, 209);
             this.deleteMarkerButton.Name = "deleteMarkerButton";
             this.deleteMarkerButton.Size = new System.Drawing.Size(75, 23);
             this.deleteMarkerButton.TabIndex = 0;
@@ -156,6 +158,8 @@
             // 
             // waitingForOpenLabel
             // 
+            this.waitingForOpenLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.waitingForOpenLabel.AutoSize = true;
             this.waitingForOpenLabel.Location = new System.Drawing.Point(457, 312);
             this.waitingForOpenLabel.Name = "waitingForOpenLabel";
@@ -170,6 +174,7 @@
             // 
             // imgCounterLabel
             // 
+            this.imgCounterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.imgCounterLabel.AutoSize = true;
             this.imgCounterLabel.Location = new System.Drawing.Point(902, 680);
             this.imgCounterLabel.Name = "imgCounterLabel";
@@ -179,6 +184,7 @@
             // 
             // nextButton
             // 
+            this.nextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.nextButton.Location = new System.Drawing.Point(938, 675);
             this.nextButton.Name = "nextButton";
             this.nextButton.Size = new System.Drawing.Size(75, 23);
@@ -189,6 +195,7 @@
             // 
             // prevButton
             // 
+            this.prevButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.prevButton.Location = new System.Drawing.Point(821, 675);
             this.prevButton.Name = "prevButton";
             this.prevButton.Size = new System.Drawing.Size(75, 23);
@@ -220,7 +227,7 @@
             this.markerLabelTextBox.TabIndex = 7;
             this.markerLabelTextBox.Visible = false;
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -234,7 +241,8 @@
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.MinimumSize = new System.Drawing.Size(500, 500);
+            this.Name = "MainWindow";
             this.Text = "PicPicker";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
