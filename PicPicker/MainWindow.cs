@@ -26,10 +26,14 @@ namespace PicPicker
 
         public MainWindow()
         {
-            marker.MakeTransparent(marker.GetPixel(marker.Width/2, marker.Height/2));
-            highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(highlightedMarker.Width/2, highlightedMarker.Height/2));
+            InitPreComponents();
             InitializeComponent();
             InitListBox();
+        }
+
+        private void InitPreComponents() {
+            marker.MakeTransparent(marker.GetPixel(marker.Width / 2, marker.Height / 2));
+            highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(highlightedMarker.Width / 2, highlightedMarker.Height / 2));
         }
 
         private void InitListBox()
@@ -39,11 +43,6 @@ namespace PicPicker
             markerListBox.ValueMember = "Text";
 
             markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
-        }
-
-        private void markerLabelTextBox_LostFocus(object sender, EventArgs e)
-        {
-            unselectTextbox();
         }
 
         private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -87,7 +86,7 @@ namespace PicPicker
             currentMarker--;
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBox_Click(object sender, EventArgs e)
         {
             if (pictureBox.Image == null)
             {
@@ -110,8 +109,6 @@ namespace PicPicker
                     tempMarker.BackColor = Color.Transparent;
                     tempMarker.Image = marker;
                     tempMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
-
-                    Console.WriteLine(tempMarker.Location.X + " / " + tempMarker.Location.Y);
 
                     markerLabelTextBox.Visible = true;
                     markerLabelTextBox.Location = PointToClient(new Point(Cursor.Position.X + 5, Cursor.Position.Y + 5));
@@ -170,7 +167,27 @@ namespace PicPicker
 
         private void savePicture()
         {
-            Console.WriteLine();
+            //stackoverflow.com_questions_48716515_how-to-get-real-image-pixel-point-x-y-from-picturebox
+            Int32 realW = pictureBox.Image.Width;
+            Int32 realH = pictureBox.Image.Height;
+            Int32 currentW = pictureBox.ClientRectangle.Width;
+            Int32 currentH = pictureBox.ClientRectangle.Height;
+            Double zoomW = (currentW / (Double)realW);
+            Double zoomH = (currentH / (Double)realH);
+            Double zoomActual = Math.Min(zoomW, zoomH);
+            Double padX = zoomActual == zoomW ? 0 : (currentW - (zoomActual * realW)) / 2;
+            Double padY = zoomActual == zoomH ? 0 : (currentH - (zoomActual * realH)) / 2;
+
+            for (int i = 0; i < markerList.Count; i++)
+            {
+                Int32 realX = (Int32)(((markerList[i].Location.X + 32) - padX) / zoomActual);
+                Int32 realY = (Int32)(((markerList[i].Location.Y + 32) - padY) / zoomActual);
+
+                String PosXval = realX < 0 || realX > realW ? "-" : realX.ToString();
+                String PosYval = realY < 0 || realY > realH ? "-" : realY.ToString();
+                Console.WriteLine("X: " + PosXval + " //Y: " + PosYval);
+            }
+            
         }
 
         private void loadPicture()
