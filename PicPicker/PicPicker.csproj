@@ -86,5 +86,8 @@
   <ItemGroup>
     <None Include="Resources\Marker.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HighlightedMarker.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PicPicker
@@ -20,39 +17,59 @@ namespace PicPicker
         private bool editMode = true;
         private BindingList<Label> markerList = new BindingList<Label>();
         private Bitmap marker = new Bitmap(Properties.Resources.Marker);
+        private Bitmap highlightedMarker = new Bitmap(Properties.Resources.HighlightedMarker);
         private int currentMarker = 0;
         Label tempMarker;
 
         public Form1()
         {
-            
             marker.MakeTransparent(marker.GetPixel(10, 10));
+            highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(10, 10));
             InitializeComponent();
             InitListBox();
-            markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
         }
 
-        private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                tempMarker.Text = markerLabelTextBox.Text;
-                tempMarker.Focus();
-                markerLabelTextBox.Text = "";
-                markerLabelTextBox.Visible = false;
-                markerList.Add(tempMarker);
-                currentMarker++;
-            }
-        }
         private void InitListBox()
         {
             markerListBox.DataSource = markerList;
             markerListBox.DisplayMember = "Text";
             markerListBox.ValueMember = "Text";
             markerListBox.SelectionMode = SelectionMode.MultiExtended;
+
+            //markerLabelTextBox.LostFocus += new EventHandler(markerLabelTextBox_LostFocus);
+            markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
         }
 
-        private void deleteMarker_Click(object sender, EventArgs e)
+        private void markerLabelTextBox_LostFocus(object sender, EventArgs e)
+        {
+            tempMarker.Dispose();
+            markerLabelTextBox.Text = "";
+            markerLabelTextBox.Visible = false;
+        }
+
+        private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Console.WriteLine("Fire!");
+            Console.WriteLine(e.KeyChar);
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                tempMarker.Text = markerLabelTextBox.Text;
+                markerList.Add(tempMarker);
+
+                markerLabelTextBox.Text = "";
+                markerLabelTextBox.Visible = false;
+                
+                currentMarker++;
+                pictureBox.Focus();
+                Console.WriteLine("TempMarker: " + tempMarker.Text);
+                Console.WriteLine("MarkerList_Count: " + markerList.Count);
+                Console.WriteLine("MarkerList: " + markerList[markerList.Count-1]);
+                Console.WriteLine("--------");
+                markerListBox.ClearSelected();
+            }
+        }
+        
+        private void deleteMarkerButton_Click(object sender, EventArgs e)
         {
             //TODO - Fix deletion of last element
             for (int x = markerListBox.Items.Count - 1; x >= 0; x--)
@@ -77,17 +94,20 @@ namespace PicPicker
             {
                 if (editMode == true)
                 {
+                    if (tempMarker != null)
+                    {
+                        tempMarker.Focus();
+                    }
                     tempMarker = new Label();
-                    markerLabelTextBox.Location = PointToClient(new Point(Cursor.Position.X + 5, Cursor.Position.Y + 5));
-                    markerLabelTextBox.Visible = true;
-                    markerLabelTextBox.Focus();
-
-                    
                     tempMarker.Size = new Size(marker.Width, marker.Height);
                     tempMarker.Parent = pictureBox;
                     tempMarker.BackColor = Color.Transparent;
                     tempMarker.Image = marker;
                     tempMarker.Location = PointToClient(new Point(Cursor.Position.X - 45, Cursor.Position.Y - 60));
+
+                    markerLabelTextBox.Visible = true;
+                    markerLabelTextBox.Location = PointToClient(new Point(Cursor.Position.X + 5, Cursor.Position.Y + 5));
+                    markerLabelTextBox.Focus();
                 }
             }
         }
@@ -136,8 +156,14 @@ namespace PicPicker
 
         private void nextButton_Click(object sender, EventArgs e)
         {
+            savePicture();
             picCounter++;
             loadPicture();
+        }
+
+        private void savePicture()
+        {
+            Console.WriteLine();
         }
 
         private void loadPicture()
@@ -157,6 +183,10 @@ namespace PicPicker
                     noDescriptionMeta(currentImage.GetPropertyItem(40092));
                 }
                 imgCounterLabel.Text = "(" + (picCounter + 1) + "/" + imageFileList.Count + ")";
+                if ((picCounter + 1) == imageFileList.Count)
+                {
+                    nextButton.Text = "Save";
+                }
             }
         }
 
@@ -195,6 +225,19 @@ namespace PicPicker
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openLoadDialog();
+        }
+
+        private void markerListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int index = markerListBox.SelectedIndex;
+            foreach (Label label in markerList)
+            {
+                label.Image = marker;
+            }
+            if (index > -1)
+            {
+                markerList[index].Image = highlightedMarker;
+            }
         }
     }
 }

@@ -32,7 +32,7 @@
             this.markerListBox = new System.Windows.Forms.ListBox();
             this.markerCheckbox = new System.Windows.Forms.CheckBox();
             this.descriptionTextBox = new System.Windows.Forms.RichTextBox();
-            this.deleteMarker = new System.Windows.Forms.Button();
+            this.deleteMarkerButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +58,7 @@
             this.groupBox1.Controls.Add(this.markerListBox);
             this.groupBox1.Controls.Add(this.markerCheckbox);
             this.groupBox1.Controls.Add(this.descriptionTextBox);
-            this.groupBox1.Controls.Add(this.deleteMarker);
+            this.groupBox1.Controls.Add(this.deleteMarkerButton);
             this.groupBox1.Location = new System.Drawing.Point(1019, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(180, 671);
@@ -72,6 +72,7 @@
             this.markerListBox.Name = "markerListBox";
             this.markerListBox.Size = new System.Drawing.Size(168, 186);
             this.markerListBox.TabIndex = 3;
+            this.markerListBox.SelectedIndexChanged += new System.EventHandler(this.markerListBox_SelectedIndexChanged);
             // 
             // markerCheckbox
             // 
@@ -95,16 +96,16 @@
             this.descriptionTextBox.Text = "";
             this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
             // 
-            // deleteMarker
+            // deleteMarkerButton
             // 
-            this.deleteMarker.Cursor = System.Windows.Forms.Cursors.Default;
-            this.deleteMarker.Location = new System.Drawing.Point(99, 437);
-            this.deleteMarker.Name = "deleteMarker";
-            this.deleteMarker.Size = new System.Drawing.Size(75, 23);
-            this.deleteMarker.TabIndex = 0;
-            this.deleteMarker.Text = "Delete";
-            this.deleteMarker.UseVisualStyleBackColor = true;
-            this.deleteMarker.Click += new System.EventHandler(this.deleteMarker_Click);
+            this.deleteMarkerButton.Cursor = System.Windows.Forms.Cursors.Default;
+            this.deleteMarkerButton.Location = new System.Drawing.Point(99, 437);
+            this.deleteMarkerButton.Name = "deleteMarkerButton";
+            this.deleteMarkerButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteMarkerButton.TabIndex = 0;
+            this.deleteMarkerButton.Text = "Delete";
+            this.deleteMarkerButton.UseVisualStyleBackColor = true;
+            this.deleteMarkerButton.Click += new System.EventHandler(this.deleteMarkerButton_Click);
             // 
             // menuStrip1
             // 
@@ -213,7 +214,7 @@
             // 
             // markerLabelTextBox
             // 
-            this.markerLabelTextBox.Location = new System.Drawing.Point(905, 46);
+            this.markerLabelTextBox.Location = new System.Drawing.Point(905, 36);
             this.markerLabelTextBox.Name = "markerLabelTextBox";
             this.markerLabelTextBox.Size = new System.Drawing.Size(100, 20);
             this.markerLabelTextBox.TabIndex = 7;
@@ -255,7 +256,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.Button deleteMarker;
+        private System.Windows.Forms.Button deleteMarkerButton;
         private System.Windows.Forms.Label waitingForOpenLabel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Label imgCounterLabel;

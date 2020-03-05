@@ -63,6 +63,16 @@ namespace PicPicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap HighlightedMarker {
+            get {
+                object obj = ResourceManager.GetObject("HighlightedMarker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Marker {
             get {
                 object obj = ResourceManager.GetObject("Marker", resourceCulture);
