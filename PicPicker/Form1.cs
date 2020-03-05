@@ -23,8 +23,8 @@ namespace PicPicker
 
         public Form1()
         {
-            marker.MakeTransparent(marker.GetPixel(10, 10));
-            highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(10, 10));
+            marker.MakeTransparent(marker.GetPixel(marker.Width/2, marker.Height/2));
+            highlightedMarker.MakeTransparent(highlightedMarker.GetPixel(highlightedMarker.Width/2, highlightedMarker.Height/2));
             InitializeComponent();
             InitListBox();
         }
@@ -34,7 +34,6 @@ namespace PicPicker
             markerListBox.DataSource = markerList;
             markerListBox.DisplayMember = "Text";
             markerListBox.ValueMember = "Text";
-            markerListBox.SelectionMode = SelectionMode.MultiExtended;
 
             //markerLabelTextBox.LostFocus += new EventHandler(markerLabelTextBox_LostFocus);
             markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
@@ -42,9 +41,7 @@ namespace PicPicker
 
         private void markerLabelTextBox_LostFocus(object sender, EventArgs e)
         {
-            tempMarker.Dispose();
-            markerLabelTextBox.Text = "";
-            markerLabelTextBox.Visible = false;
+            unselectTextbox();
         }
 
         private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -67,20 +64,25 @@ namespace PicPicker
                 Console.WriteLine("--------");
                 markerListBox.ClearSelected();
             }
+            else if (e.KeyChar == (char)Keys.Escape)
+            {
+                //unselectTextbox();
+            }
         }
-        
+
+        private void unselectTextbox()
+        {
+            tempMarker.Dispose();
+            markerLabelTextBox.Text = "";
+            markerLabelTextBox.Visible = false;
+        }
+
         private void deleteMarkerButton_Click(object sender, EventArgs e)
         {
-            //TODO - Fix deletion of last element
-            for (int x = markerListBox.Items.Count - 1; x >= 0; x--)
-            {
-                if (markerListBox.GetSelected(x) == true)
-                {
-                    markerList[x].Dispose();
-                    markerList.RemoveAt(x);
-                    currentMarker--;
-                } 
-            }
+
+            markerList[markerListBox.SelectedIndex].Dispose();
+            markerList.RemoveAt(markerListBox.SelectedIndex);
+            currentMarker--;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
