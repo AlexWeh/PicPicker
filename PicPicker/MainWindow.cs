@@ -13,13 +13,13 @@ namespace PicPicker
         private int picCounter = 0;
         private int currentMarker = 0;
 
-        private List<String> imageFileList = new List<String>();
+        private List<string> imageFileList = new List<string>();
         private BindingList<Label> markerList = new BindingList<Label>();
 
         private Bitmap marker = new Bitmap(Properties.Resources.Marker);
         private Bitmap highlightedMarker = new Bitmap(Properties.Resources.HighlightedMarker);
 
-        private System.Text.ASCIIEncoding enc = new ASCIIEncoding();
+        private ASCIIEncoding enc = new ASCIIEncoding();
         private PropertyItem bestPropItem;
         private Label tempMarker;
 
@@ -151,27 +151,31 @@ namespace PicPicker
         private void SavePicture()
         {
             //stackoverflow.com_questions_48716515_how-to-get-real-image-pixel-point-x-y-from-picturebox
-            Int32 realW = pictureBox.Image.Width;
-            Int32 realH = pictureBox.Image.Height;
-            Int32 currentW = pictureBox.ClientRectangle.Width;
-            Int32 currentH = pictureBox.ClientRectangle.Height;
-            Double zoomW = (currentW / (Double)realW);
-            Double zoomH = (currentH / (Double)realH);
-            Double zoomActual = Math.Min(zoomW, zoomH);
-            Double padX = zoomActual == zoomW ? 0 : (currentW - (zoomActual * realW)) / 2;
-            Double padY = zoomActual == zoomH ? 0 : (currentH - (zoomActual * realH)) / 2;
+            int realW = pictureBox.Image.Width;
+            int realH = pictureBox.Image.Height;
+            int currentW = pictureBox.ClientRectangle.Width;
+            int currentH = pictureBox.ClientRectangle.Height;
+            double zoomW = (currentW / (double)realW);
+            double zoomH = (currentH / (double)realH);
+            double zoomActual = Math.Min(zoomW, zoomH);
+            double padX = zoomActual == zoomW ? 0 : (currentW - (zoomActual * realW)) / 2;
+            double padY = zoomActual == zoomH ? 0 : (currentH - (zoomActual * realH)) / 2;
 
             for (int i = 0; i < markerList.Count; i++)
             {
-                Int32 realX = (Int32)(((markerList[i].Location.X + 32) - padX) / zoomActual);
-                Int32 realY = (Int32)(((markerList[i].Location.Y + 32) - padY) / zoomActual);
+                int realX = (int)(((markerList[i].Location.X + 32) - padX) / zoomActual);
+                int realY = (int)(((markerList[i].Location.Y + 32) - padY) / zoomActual);
 
-                String PosXval = realX < 0 || realX > realW ? "-" : realX.ToString();
-                String PosYval = realY < 0 || realY > realH ? "-" : realY.ToString();
+                string PosXval = realX < 0 || realX > realW ? "-" : realX.ToString();
+                string PosYval = realY < 0 || realY > realH ? "-" : realY.ToString();
                 Console.WriteLine("X: " + PosXval + " //Y: " + PosYval);
             }
-
-            //bestPropItem.Value = enc.GetBytes(descriptionTextBox.Text);
+            string description = descriptionTextBox.Text;
+            if (markerList.Count > 0)
+            {
+                description += MarkerToJson();
+            }
+            //bestPropItem.Value = enc.GetBytes(description);
             Bitmap copy = new Bitmap(pictureBox.Image);
             pictureBox.Image.Dispose();
             pictureBox.Image = null;
@@ -179,9 +183,21 @@ namespace PicPicker
             {
                 System.IO.File.Delete(imageFileList[picCounter]);
             }
-            waitingForOpenLabel.Visible = true;
+
             copy.Save(imageFileList[picCounter]);
+            Reset();
+        }
+
+        private void Reset()
+        {
+            waitingForOpenLabel.Visible = true;
             hasNoImageLoaded = true;
+            imgCounterLabel.Text = "(0/0)";
+            if (nextButton.Text == "Save")
+            {
+                imageFileList.Clear();
+            }
+
         }
 
         private void LoadPicture()
@@ -192,7 +208,6 @@ namespace PicPicker
                 pictureBox.Image = Image.FromFile(imageFileList[picCounter]);
 
                 hasNoImageLoaded = false;
-
                 
                 PropertyItem[] propItems = pictureBox.Image.PropertyItems;
                 List<int> propIds = new List<int>();
@@ -204,8 +219,8 @@ namespace PicPicker
                 if (propIds.Contains(270) )
                 {
                     bestPropItem = pictureBox.Image.GetPropertyItem(270);
-                    List<Byte> tempChars = new List<Byte>();
-                    foreach (Byte character in bestPropItem.Value)
+                    List<byte> tempChars = new List<byte>();
+                    foreach (byte character in bestPropItem.Value)
                     {
                         if (character != 0)
                         {
@@ -217,8 +232,8 @@ namespace PicPicker
                 else if (propIds.Contains(40092))
                 {
                     bestPropItem = pictureBox.Image.GetPropertyItem(40092);
-                    List<Byte> tempChars = new List<Byte>();
-                    foreach (Byte character in bestPropItem.Value)
+                    List<byte> tempChars = new List<byte>();
+                    foreach (byte character in bestPropItem.Value)
                     {
                         if (character != 0)
                         {
@@ -235,6 +250,7 @@ namespace PicPicker
                     bestPropItem.Value = enc.GetBytes("");
                 }
 
+                JsonToMarker(enc.GetString(bestPropItem.Value));
                 descriptionTextBox.Text = enc.GetString(bestPropItem.Value);
 
                 imgCounterLabel.Text = "(" + (picCounter + 1) + "/" + imageFileList.Count + ")";
@@ -285,6 +301,18 @@ namespace PicPicker
             if (index > -1)
             {
                 markerList[index].Image = highlightedMarker;
+            }
+        }
+
+        private string MarkerToJson() {
+            string jsonMarkerString = "{\"Person\": [{\"Name\": \"Alex\",\" Position\":},\"{Name\": \"Peter\", \"xPos\": 300, yPos: 300}]";
+            return jsonMarkerString;
+        }
+
+        private void JsonToMarker(string markerString) {
+            if (markerString.Contains("{\"Person\": [{"))
+            {
+
             }
         }
     }
