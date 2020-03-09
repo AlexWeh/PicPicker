@@ -73,7 +73,7 @@
             this.markerListBox.Name = "markerListBox";
             this.markerListBox.Size = new System.Drawing.Size(168, 184);
             this.markerListBox.TabIndex = 3;
-            this.markerListBox.SelectedIndexChanged += new System.EventHandler(this.markerListBox_SelectedIndexChanged);
+            this.markerListBox.SelectedIndexChanged += new System.EventHandler(this.MarkerListBox_SelectedIndexChanged);
             // 
             // markerCheckbox
             // 
@@ -86,7 +86,7 @@
             this.markerCheckbox.TabIndex = 2;
             this.markerCheckbox.Text = "Show Marker";
             this.markerCheckbox.UseVisualStyleBackColor = true;
-            this.markerCheckbox.CheckedChanged += new System.EventHandler(this.markerCheckbox_CheckedChanged);
+            this.markerCheckbox.CheckedChanged += new System.EventHandler(this.MarkerCheckbox_CheckedChanged);
             // 
             // descriptionTextBox
             // 
@@ -96,7 +96,6 @@
             this.descriptionTextBox.Size = new System.Drawing.Size(168, 144);
             this.descriptionTextBox.TabIndex = 1;
             this.descriptionTextBox.Text = "";
-            this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
             // 
             // deleteMarkerButton
             // 
@@ -107,7 +106,7 @@
             this.deleteMarkerButton.TabIndex = 0;
             this.deleteMarkerButton.Text = "Delete";
             this.deleteMarkerButton.UseVisualStyleBackColor = true;
-            this.deleteMarkerButton.Click += new System.EventHandler(this.deleteMarkerButton_Click);
+            this.deleteMarkerButton.Click += new System.EventHandler(this.DeleteMarkerButton_Click);
             // 
             // menuStrip1
             // 
@@ -134,7 +133,7 @@
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
             this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.openFolderToolStripMenuItem.Text = "Open Pictures";
-            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
+            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -191,7 +190,7 @@
             this.nextButton.TabIndex = 5;
             this.nextButton.Text = "Next";
             this.nextButton.UseVisualStyleBackColor = true;
-            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
+            this.nextButton.Click += new System.EventHandler(this.NextButton_Click);
             // 
             // prevButton
             // 
@@ -202,7 +201,7 @@
             this.prevButton.TabIndex = 6;
             this.prevButton.Text = "Previous";
             this.prevButton.UseVisualStyleBackColor = true;
-            this.prevButton.Click += new System.EventHandler(this.prevButton_Click);
+            this.prevButton.Click += new System.EventHandler(this.PrevButton_Click);
             // 
             // pictureBox
             // 
@@ -217,7 +216,7 @@
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
-            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
+            this.pictureBox.Click += new System.EventHandler(this.PictureBox_Click);
             // 
             // markerLabelTextBox
             // 

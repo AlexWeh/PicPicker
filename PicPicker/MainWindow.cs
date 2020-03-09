@@ -19,10 +19,13 @@ namespace PicPicker
         private Bitmap marker = new Bitmap(Properties.Resources.Marker);
         private Bitmap highlightedMarker = new Bitmap(Properties.Resources.HighlightedMarker);
 
-        private Image currentImage;
         private System.Text.ASCIIEncoding enc = new ASCIIEncoding();
-        private bool editMode = true;
+        private PropertyItem bestPropItem;
         private Label tempMarker;
+
+        private bool editMode = true;
+        private bool hasNoImageLoaded = true;
+        
 
         public MainWindow()
         {
@@ -42,10 +45,10 @@ namespace PicPicker
             markerListBox.DisplayMember = "Text";
             markerListBox.ValueMember = "Text";
 
-            markerLabelTextBox.KeyPress += new KeyPressEventHandler(markerLabelTextBox_KeyPress);
+            markerLabelTextBox.KeyPress += new KeyPressEventHandler(MarkerLabelTextBox_KeyPress);
         }
 
-        private void markerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void MarkerLabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
@@ -66,11 +69,11 @@ namespace PicPicker
             }
             else if (e.KeyChar == (char)Keys.Escape)
             {
-                unselectTextbox();
+                UnselectTextbox();
             }
         }
 
-        private void unselectTextbox()
+        private void UnselectTextbox()
         {
             tempMarker.Dispose();
             tempMarker = null;
@@ -78,7 +81,7 @@ namespace PicPicker
             markerLabelTextBox.Visible = false;
         }
 
-        private void deleteMarkerButton_Click(object sender, EventArgs e)
+        private void DeleteMarkerButton_Click(object sender, EventArgs e)
         {
 
             markerList[markerListBox.SelectedIndex].Dispose();
@@ -86,12 +89,11 @@ namespace PicPicker
             currentMarker--;
         }
 
-        private void pictureBox_Click(object sender, EventArgs e)
+        private void PictureBox_Click(object sender, EventArgs e)
         {
-            if (pictureBox.Image == null)
+            if (hasNoImageLoaded)
             {
-                openLoadDialog();
-                waitingForOpenLabel.Visible = false;
+                OpenLoadDialog();
             }
             else
             {
@@ -117,55 +119,36 @@ namespace PicPicker
             }
         }
 
-        private void openLoadDialog()
+        private void OpenLoadDialog()
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                foreach (string file in openFileDialog.FileNames)
+                foreach (string fileName in openFileDialog.FileNames)
                 {
                     try
                     {
-                        Image tryLoadingAsImage = Image.FromFile(file);
-                        imageFileList.Add(file);
+                        //Image tryLoadingAsImage = Image.FromFile(file);
+                        imageFileList.Add(fileName);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                        MessageBox.Show("Cannot display the image: " + fileName.Substring(fileName.LastIndexOf('\\'))
                             + ". You may not have permission to read the file, or " +
                             "it may be corrupt.\n\nReported error: " + ex.Message);
                     }
                 }
-                loadPicture();
+                LoadPicture();
             }
         }
 
-        private void noDescriptionMeta(PropertyItem propertyItem)
+        private void NextButton_Click(object sender, EventArgs e)
         {
-            string result = "";
-            string temp = enc.GetString(propertyItem.Value);
-            for (int i = 0; i < temp.Length; i += 2)
-            {
-                result += temp[i];
-            }
-            this.descriptionTextBox.Text = result;
-            //propertyItem.Id = 270;
-            //propertyItem.Type = 2;
-            //currentImage.SetPropertyItem(propertyItem);
-        }
-
-        private void hasDescriptionMeta(PropertyItem propertyItem)
-        {
-            descriptionTextBox.Text = enc.GetString(propertyItem.Value); 
-        }
-
-        private void nextButton_Click(object sender, EventArgs e)
-        {
-            savePicture();
+            SavePicture();
             picCounter++;
-            loadPicture();
+            LoadPicture();
         }
 
-        private void savePicture()
+        private void SavePicture()
         {
             //stackoverflow.com_questions_48716515_how-to-get-real-image-pixel-point-x-y-from-picturebox
             Int32 realW = pictureBox.Image.Width;
@@ -187,26 +170,75 @@ namespace PicPicker
                 String PosYval = realY < 0 || realY > realH ? "-" : realY.ToString();
                 Console.WriteLine("X: " + PosXval + " //Y: " + PosYval);
             }
-            
+
+            //bestPropItem.Value = enc.GetBytes(descriptionTextBox.Text);
+            Bitmap copy = new Bitmap(pictureBox.Image);
+            pictureBox.Image.Dispose();
+            pictureBox.Image = null;
+            if (System.IO.File.Exists(imageFileList[picCounter]))
+            {
+                System.IO.File.Delete(imageFileList[picCounter]);
+            }
+            waitingForOpenLabel.Visible = true;
+            copy.Save(imageFileList[picCounter]);
+            hasNoImageLoaded = true;
         }
 
-        private void loadPicture()
+        private void LoadPicture()
         {
             if (picCounter >= 0 && picCounter < imageFileList.Count)
             {
-                currentImage = Image.FromFile(imageFileList[picCounter]);
-                pictureBox.Image = currentImage;
-                //Console.WriteLine(currentImage.GetPropertyItem(271).Type);
+                waitingForOpenLabel.Visible = false;
+                pictureBox.Image = Image.FromFile(imageFileList[picCounter]);
 
-                try
+                hasNoImageLoaded = false;
+
+                
+                PropertyItem[] propItems = pictureBox.Image.PropertyItems;
+                List<int> propIds = new List<int>();
+                foreach (PropertyItem item in propItems)
                 {
-                    hasDescriptionMeta(currentImage.GetPropertyItem(270));
+                    propIds.Add(item.Id);
                 }
-                catch (Exception)
+
+                if (propIds.Contains(270) )
                 {
-                    noDescriptionMeta(currentImage.GetPropertyItem(40092));
+                    bestPropItem = pictureBox.Image.GetPropertyItem(270);
+                    List<Byte> tempChars = new List<Byte>();
+                    foreach (Byte character in bestPropItem.Value)
+                    {
+                        if (character != 0)
+                        {
+                            tempChars.Add(character);
+                        }
+                    }
+                    bestPropItem.Value = tempChars.ToArray();
                 }
+                else if (propIds.Contains(40092))
+                {
+                    bestPropItem = pictureBox.Image.GetPropertyItem(40092);
+                    List<Byte> tempChars = new List<Byte>();
+                    foreach (Byte character in bestPropItem.Value)
+                    {
+                        if (character != 0)
+                        {
+                            tempChars.Add(character);
+                        }
+                    }
+                    bestPropItem.Value = tempChars.ToArray();
+                }
+                else
+                {
+                    bestPropItem = propItems[0];
+                    bestPropItem.Id = 270;
+                    bestPropItem.Type = 2;
+                    bestPropItem.Value = enc.GetBytes("");
+                }
+
+                descriptionTextBox.Text = enc.GetString(bestPropItem.Value);
+
                 imgCounterLabel.Text = "(" + (picCounter + 1) + "/" + imageFileList.Count + ")";
+
                 if ((picCounter + 1) == imageFileList.Count)
                 {
                     nextButton.Text = "Save";
@@ -214,21 +246,13 @@ namespace PicPicker
             }
         }
 
-        private void prevButton_Click(object sender, EventArgs e)
+        private void PrevButton_Click(object sender, EventArgs e)
         {
             picCounter--;
-            loadPicture();
+            LoadPicture();
         }
 
-        private void descriptionTextBox_TextChanged(object sender, EventArgs e)
-        {
-            PropertyItem propertyItem = currentImage.GetPropertyItem(40092);
-            Console.WriteLine(descriptionTextBox.Text);
-            propertyItem.Value = enc.GetBytes(descriptionTextBox.Text);
-            currentImage.SetPropertyItem(propertyItem);
-        }
-
-        private void markerCheckbox_CheckedChanged(object sender, EventArgs e)
+        private void MarkerCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (markerCheckbox.Checked)
             {
@@ -246,12 +270,12 @@ namespace PicPicker
             }
         }
 
-        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openLoadDialog();
+            OpenLoadDialog();
         }
 
-        private void markerListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void MarkerListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = markerListBox.SelectedIndex;
             foreach (Label label in markerList)
